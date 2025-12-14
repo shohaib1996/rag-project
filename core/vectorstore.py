@@ -21,7 +21,14 @@ load_dotenv()
 
 # collection = client.get_or_create_collection(name="documents")
 
-pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
+api_key = os.getenv("PINECONE_API_KEY")
+
+if not api_key:
+    print("❌ ERROR: PINECONE_API_KEY is not set in environment variables.")
+else:
+    print(f"✅ PINECONE_API_KEY found (starts with {api_key[:5]}...)")
+
+pc = Pinecone(api_key=api_key)
 index_name = "rag-app"
 
 # Create index if not exists (Basic check)
