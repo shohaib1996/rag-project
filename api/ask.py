@@ -33,8 +33,15 @@ async def ask_question(
         query_embedding=query_embedding, n_results=6, where={"user_id": current_user.id}
     )
 
-    documents = results.get("documents", [[]])[0]
-    metadatas = results.get("metadatas", [[]])[0]
+    # documents = results.get("documents", [[]])[0]
+    # metadatas = results.get("metadatas", [[]])[0]
+
+    # Pinecone
+    matches = results["matches"]
+    documents = [
+        match["metadata"]["text"] for match in matches if "text" in match["metadata"]
+    ]
+    metadatas = [match["metadata"] for match in matches]
 
     sources = list({meta.get("source") for meta in metadatas if meta.get("source")})
 
@@ -47,7 +54,13 @@ async def ask_question(
             n_results=12,
             where={"user_id": current_user.id},
         )
-        documents = results.get("documents", [[]])[0]
+        # documents = results.get("documents", [[]])[0]
+        matches = results["matches"]
+        documents = [
+            match["metadata"]["text"]
+            for match in matches
+            if "text" in match["metadata"]
+        ]
 
     # 4️⃣ Give up only if still nothing
     if not documents:

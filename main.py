@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from dotenv import load_dotenv
 import os
-
 from core.database import Base, engine
 from models import user  # noqa: F401 Ensure models are loaded
 from api.train import router as train_router
@@ -11,6 +10,7 @@ from api.auth import router as auth_router
 
 # Load environment variables
 load_dotenv()
+
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
