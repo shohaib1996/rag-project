@@ -79,3 +79,11 @@ def query_documents(query_embedding, n_results=3, where=None):
         include_metadata=True,
         filter=filter_dict,
     )
+
+
+def delete_vectors(filter: dict):
+    """
+    Delete vectors based on a metadata filter.
+    Example filter: {"user_id": "123", "source": "file.pdf"}
+    """
+    index.delete(filter=filter)

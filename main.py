@@ -7,6 +7,7 @@ from api.train import router as train_router
 from api.ask import router as ask_router
 from api.train_file import router as train_file_router
 from api.auth import router as auth_router
+from api.documents import router as documents_router
 
 # Load environment variables
 load_dotenv()
@@ -27,6 +28,7 @@ app.include_router(train_router)
 app.include_router(ask_router)
 app.include_router(train_file_router)
 app.include_router(auth_router)
+app.include_router(documents_router)
 
 
 # Root route (important for Railway / browsers)

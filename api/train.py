@@ -17,6 +17,12 @@ class TrainTextRequest(BaseModel):
     text: str
 
 
+from core.database import SessionLocal
+from models.document import Document
+
+# ... (imports)
+
+
 @router.post("/text")
 async def train_text(
     payload: TrainTextRequest,
@@ -28,6 +34,24 @@ async def train_text(
     if not payload.text.strip():
         raise HTTPException(status_code=400, detail="Text cannot be empty")
 
+    # 1. Create Document record
+    snippet = payload.text[:50].replace("\n", " ").strip() + "..."
+    doc_entry = Document(
+        user_id=current_user.id, filename=f"Text: {snippet}", file_type="text"
+    )
+
+    db = SessionLocal()
+    try:
+        db.add(doc_entry)
+        db.commit()
+        db.refresh(doc_entry)
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        db.close()
+
+    # 2. Process Vectors
     chunks = split_text(payload.text)
     embeddings = embed_texts(chunks)
 
@@ -35,9 +59,11 @@ async def train_text(
     metadatas = [
         {
             "user_id": current_user.id,
-            "source": "text",
+            "source": "text",  # Kept for backward compat if needed
+            "document_id": doc_entry.id,  # New Link
+            "text": chunk,  # Already added in vectorstore.py but explicitly good here too
         }
-        for _ in chunks
+        for chunk in chunks  # FIX: iterate over chunks, not range if we want the actual chunk text available easily here
     ]
 
     add_documents(
@@ -49,5 +75,6 @@ async def train_text(
 
     return {
         "message": "Text stored successfully",
+        "document_id": doc_entry.id,
         "chunks_stored": len(chunks),
     }
