@@ -9,7 +9,7 @@ from models.user import User
 from core.security import verify_password
 from core.jwt import create_access_token
 
-router = APIRouter(prefix="/auth/api", tags=["auth"])
+router = APIRouter(prefix="/api/auth", tags=["auth"])
 
 
 class SignupRequest(BaseModel):
