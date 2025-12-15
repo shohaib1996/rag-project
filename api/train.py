@@ -8,6 +8,8 @@ from fastapi import Depends
 from core.deps import get_current_user
 from models.user import User
 from core.rate_limiter import rate_limiter
+from core.database import SessionLocal
+from models.document import Document
 
 
 router = APIRouter(prefix="/api/train", tags=["train"])
@@ -16,9 +18,6 @@ router = APIRouter(prefix="/api/train", tags=["train"])
 class TrainTextRequest(BaseModel):
     text: str
 
-
-from core.database import SessionLocal
-from models.document import Document
 
 # ... (imports)
 
