@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 import os
 from core.database import Base, engine
@@ -21,6 +22,15 @@ app = FastAPI(
     title="RAG Backend",
     description="Knowledge-based RAG backend API",
     version="1.0.0",
+)
+
+# CORS Middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "https://rag-project-t4mo.onrender.com"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Register routers
