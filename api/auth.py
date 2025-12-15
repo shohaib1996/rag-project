@@ -62,4 +62,4 @@ def login(payload: LoginRequest):
 
     access_token = create_access_token(data={"sub": str(user.id)})
 
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {"access_token": access_token, "user": user, "token_type": "bearer"}
