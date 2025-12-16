@@ -3,12 +3,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 import os
 from core.database import Base, engine
-from models import user  # noqa: F401 Ensure models are loaded
+from models import user, conversation  # noqa: F401 Ensure models are loaded
 from api.train import router as train_router
 from api.ask import router as ask_router
 from api.train_file import router as train_file_router
 from api.auth import router as auth_router
 from api.documents import router as documents_router
+from api.conversations import router as conversations_router
 
 # Load environment variables
 load_dotenv()
@@ -39,6 +40,7 @@ app.include_router(ask_router)
 app.include_router(train_file_router)
 app.include_router(auth_router)
 app.include_router(documents_router)
+app.include_router(conversations_router)
 
 
 # Root route (important for Railway / browsers)

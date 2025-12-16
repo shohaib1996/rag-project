@@ -31,3 +31,22 @@ def generate_answer(context: str, question: str) -> str:
     )
 
     return response.choices[0].message.content.strip()
+
+
+def generate_title(question: str) -> str:
+    """
+    Generates a short 3-5 word title for a conversation based on the first question.
+    """
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {
+                "role": "system",
+                "content": "You are a helpful assistant. Generate a short, concise title (max 5 words) for the user's question. Do not include quotes.",
+            },
+            {"role": "user", "content": question},
+        ],
+        temperature=0.5,
+        max_tokens=10,
+    )
+    return response.choices[0].message.content.strip()
